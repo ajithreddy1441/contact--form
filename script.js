@@ -11,36 +11,29 @@ const firebaseConfig = {
   
   // initialize firebase
   firebase.initializeApp(firebaseConfig);
-  
   // reference your database
-  var contactformDB = firebase.database().ref("contactform");
-  
   document.getElementById("contactform").addEventListener("submit", submitForm);
   
   function submitForm(e) {
     e.preventDefault();
-  
     var name = getElementVal("name");
     var email = getElementVal("email");
     var review = getElementVal("review");
-  
-    saveMessages(name, email, review);
-  
-  
-    //   reset the form
-    document.getElementById("contactform").reset();
+    var contactformDB = firebase.database().ref(name);
+    saveMessages(name, email, review, contactformDB);
   }
-  
-  const saveMessages = (name, email, review) => {
-    var newcontactform = contactformDB.push();
-  
-    newcontactform.set({
-      name: name,
-      email: email,
-      review: review,
-    });
+  const saveMessages = (name, email, review, contactformDB) => 
+  {
+    contactformDB.set(
+      {
+        name: name,
+        email: email,
+        review: review,
+      });
+      
+    document.getElementById("contactform").reset();
   };
-  
-  const getElementVal = (id) => {
+  const getElementVal = (id) => 
+  {
     return document.getElementById(id).value;
   };
